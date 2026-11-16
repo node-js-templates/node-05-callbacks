@@ -1,6 +1,8 @@
 name: GitHub Classroom Workflow
 
-on: [push]
+on:
+  push:
+  pull_request:
 
 permissions:
   checks: write
@@ -10,6 +12,13 @@ permissions:
 jobs:
   build:
     name: Autograding
+    # Creating a repository from this template pushes its default branch into
+    # existence. That push is the new repository, not student work, so skip it.
+    # Later pushes and every pull request still run.
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.event.created != true ||
+      github.ref_name != github.event.repository.default_branch
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
